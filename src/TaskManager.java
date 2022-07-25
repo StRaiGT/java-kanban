@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
@@ -7,19 +8,20 @@ public class TaskManager {
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
     // Добавить задачу
-    public int addTask(String name, String description) {
-        tasks.put(counter, new Task(name, description));
+    public int addTask(Task task) {
+        tasks.put(counter, task);
         return counter++;
     }
 
-    public int addEpic(String name, String description) {
-        epics.put(counter, new Epic(name, description));
+    public int addEpic(Epic epic) {
+        epics.put(counter, epic);
         return counter++;
     }
 
-    public int addSubtask(String name, String description, int epicId) {
+    public int addSubtask(Subtask subtask) {
+        int epicId = subtask.getEpicId();
         if (epics.containsKey(epicId)) {
-            subtasks.put(counter, new Subtask(name, description, epicId));
+            subtasks.put(counter, subtask);
             epics.get(epicId).addSubtaskId(counter);
             updateEpicStatus(epicId);
             return counter++;
@@ -28,16 +30,28 @@ public class TaskManager {
     }
 
     // Вернуть список задач
-    public HashMap<Integer, Task> getTasks() {
-        return tasks;
+    public ArrayList<Task> getTasks() {
+        ArrayList<Task> result = new ArrayList<>();
+        for (Task task : tasks.values()) {
+            result.add(task);
+        }
+        return result;
     }
 
-    public HashMap<Integer, Epic> getEpics() {
-        return epics;
+    public ArrayList<Epic> getEpics() {
+        ArrayList<Epic> result = new ArrayList<>();
+        for (Epic epic : epics.values()) {
+            result.add(epic);
+        }
+        return result;
     }
 
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return subtasks;
+    public ArrayList<Subtask> getSubtasks() {
+        ArrayList<Subtask> result = new ArrayList<>();
+        for (Subtask subtask : subtasks.values()) {
+            result.add(subtask);
+        }
+        return result;
     }
 
     // Получить задачу по id
@@ -136,7 +150,6 @@ public class TaskManager {
         if (epics.containsKey(id)) {
             if (epics.get(id).getSubtasksId() == null) {
                 updateEpic(id, new Epic(epics.get(id),Task.STATE[0]));
-                return;
             } else {
                 boolean isNew = true;
                 boolean isDone = true;
