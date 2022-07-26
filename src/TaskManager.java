@@ -31,27 +31,15 @@ public class TaskManager {
 
     // Вернуть список задач
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> result = new ArrayList<>();
-        for (Task task : tasks.values()) {
-            result.add(task);
-        }
-        return result;
+        return new ArrayList<>(tasks.values());
     }
 
     public ArrayList<Epic> getEpics() {
-        ArrayList<Epic> result = new ArrayList<>();
-        for (Epic epic : epics.values()) {
-            result.add(epic);
-        }
-        return result;
+        return new ArrayList<>(epics.values());
     }
 
     public ArrayList<Subtask> getSubtasks() {
-        ArrayList<Subtask> result = new ArrayList<>();
-        for (Subtask subtask : subtasks.values()) {
-            result.add(subtask);
-        }
-        return result;
+        return new ArrayList<>(subtasks.values());
     }
 
     // Получить задачу по id
