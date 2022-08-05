@@ -8,7 +8,7 @@ public class Epic extends Task{
         super(name, description);
     }
 
-    public Epic(Epic epic, String status) {
+    public Epic(Epic epic, State status) {
         super(epic, status);
         this.subtasksId = epic.getSubtasksId();
     }

@@ -1,16 +1,15 @@
 public class Task {
     private String name;
     private String description;
-    private String status;
-    final static String[] STATE = new String[] {"NEW", "IN_PROGRESS", "DONE"};
+    private State status;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        status = STATE[0];
+        status = State.NEW;
     }
 
-    public Task(Task task, String status) {
+    public Task(Task task, State status) {
         this.name = task.getName();
         this.description = task.getDescription();
         this.status = status;
@@ -24,7 +23,7 @@ public class Task {
         return description;
     }
 
-    public String getStatus() {
+    public State getStatus() {
         return status;
     }
 

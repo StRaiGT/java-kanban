@@ -1,29 +1,29 @@
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
 
         // Дебажим Task
         Task task1 = new Task("task 1", "description task 1");
         Task task2 = new Task("task 2", "description task 2");
         Task task3 = new Task("task 3", "description task 3");
-        int taskId1 = taskManager.addTask(task1);
-        int taskId2 = taskManager.addTask(task2);
-        int taskId3 = taskManager.addTask(task3);
-        System.out.println(taskManager.getTasks());
+        int taskId1 = inMemoryTaskManager.addTask(task1);
+        int taskId2 = inMemoryTaskManager.addTask(task2);
+        int taskId3 = inMemoryTaskManager.addTask(task3);
+        System.out.println(inMemoryTaskManager.getTasks());
 
-        System.out.println(taskManager.getTask(taskId2));
+        System.out.println(inMemoryTaskManager.getTask(taskId2));
 
-        taskManager.updateTask(taskId1, new Task(
-                new Task("task 1 update", "description task 1 update"), Task.STATE[1]));
-        taskManager.updateTask(taskId2, new Task(
+        inMemoryTaskManager.updateTask(taskId1, new Task(
+                new Task("task 1 update", "description task 1 update"), State.IN_PROGRESS));
+        inMemoryTaskManager.updateTask(taskId2, new Task(
                 new Task("task 2 update", "description task 2 update"),
-                taskManager.getTask(taskId2).getStatus()));
-        taskManager.updateTask(taskId3, new Task(taskManager.getTask(taskId3), Task.STATE[2]));
+                inMemoryTaskManager.getTask(taskId2).getStatus()));
+        inMemoryTaskManager.updateTask(taskId3, new Task(inMemoryTaskManager.getTask(taskId3), State.DONE));
 
-        taskManager.removeTask(taskId2);
+        inMemoryTaskManager.removeTask(taskId2);
 
-        taskManager.removeAllTasks();
+        inMemoryTaskManager.removeAllTasks();
 
         System.out.println();
 
@@ -31,43 +31,50 @@ public class Main {
         Epic epic1 = new Epic("epic 1", "description epic 1");
         Epic epic2 = new Epic("epic 2", "description epic 2");
         Epic epic3 = new Epic("epic 3", "description epic 3");
-        int epicId1 = taskManager.addEpic(epic1);
-        int epicId2 = taskManager.addEpic(epic2);
-        int epicId3 = taskManager.addEpic(epic3);
+        int epicId1 = inMemoryTaskManager.addEpic(epic1);
+        int epicId2 = inMemoryTaskManager.addEpic(epic2);
+        int epicId3 = inMemoryTaskManager.addEpic(epic3);
         Subtask subtask1 = new Subtask("subtask 1", "description subtask 1", epicId1);
         Subtask subtask2 = new Subtask("subtask 2", "description subtask 2", epicId1);
         Subtask subtask3 = new Subtask("subtask 3", "description subtask 3", epicId2);
         Subtask subtask4 = new Subtask("subtask 4", "description subtask 4", epicId3);
-        int subtaskId1 = taskManager.addSubtask(subtask1);
-        int subtaskId2 = taskManager.addSubtask(subtask2);
-        int subtaskId3 = taskManager.addSubtask(subtask3);
-        int subtaskId4 = taskManager.addSubtask(subtask4);
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtasks());
+        int subtaskId1 = inMemoryTaskManager.addSubtask(subtask1);
+        int subtaskId2 = inMemoryTaskManager.addSubtask(subtask2);
+        int subtaskId3 = inMemoryTaskManager.addSubtask(subtask3);
+        int subtaskId4 = inMemoryTaskManager.addSubtask(subtask4);
+        System.out.println(inMemoryTaskManager.getEpics());
+        System.out.println(inMemoryTaskManager.getSubtasks());
 
-        System.out.println(taskManager.getEpic(epicId1));
-        System.out.println(taskManager.getSubtask(subtaskId4));
+        System.out.println(inMemoryTaskManager.getEpic(epicId1));
+        System.out.println(inMemoryTaskManager.getSubtask(subtaskId4));
 
-        taskManager.updateEpic(epicId1, new Epic("epic 1 update", "description epic 1 update"));
-        taskManager.updateSubtask(subtaskId1, new Subtask(
+        inMemoryTaskManager.updateEpic(epicId1, new Epic("epic 1 update", "description epic 1 update"));
+        inMemoryTaskManager.updateSubtask(subtaskId1, new Subtask(
                 new Subtask("subtask 1 update", "description subtask 1 update",
-                        taskManager.getSubtask(subtaskId1).getEpicId()), Task.STATE[1]));
-        taskManager.updateSubtask(subtaskId2, new Subtask(taskManager.getSubtask(subtaskId2), Task.STATE[2]));
-        taskManager.updateSubtask(subtaskId3, new Subtask(
+                        inMemoryTaskManager.getSubtask(subtaskId1).getEpicId()), State.IN_PROGRESS));
+        inMemoryTaskManager.updateSubtask(subtaskId2, new Subtask(inMemoryTaskManager.getSubtask(subtaskId2), State.DONE));
+        inMemoryTaskManager.updateSubtask(subtaskId3, new Subtask(
                 new Subtask("subtask 3 update", "description subtask 3 update",
-                        taskManager.getSubtask(subtaskId3).getEpicId()),
-                taskManager.getSubtask(subtaskId3).getStatus()));
-        taskManager.updateSubtask(subtaskId4, new Subtask(taskManager.getSubtask(subtaskId4), Task.STATE[2]));
+                        inMemoryTaskManager.getSubtask(subtaskId3).getEpicId()),
+                inMemoryTaskManager.getSubtask(subtaskId3).getStatus()));
+        inMemoryTaskManager.updateSubtask(subtaskId4, new Subtask(inMemoryTaskManager.getSubtask(subtaskId4), State.DONE));
 
-        taskManager.removeSubtask(subtaskId4);
+        inMemoryTaskManager.removeSubtask(subtaskId4);
 
-        taskManager.removeEpic(epicId2);
+        inMemoryTaskManager.removeEpic(epicId2);
 
-        taskManager.removeAllSubtasks();
+        inMemoryTaskManager.removeAllSubtasks();
 
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-        taskManager.removeAllEpics();
+        inMemoryTaskManager.addSubtask(subtask1);
+        inMemoryTaskManager.addSubtask(subtask2);
+        inMemoryTaskManager.removeAllEpics();
+
+        System.out.println();
+
+        // Дебажим историю (в списке уже есть 10 записей)
+        inMemoryTaskManager.getEpic(inMemoryTaskManager.addEpic(new Epic("epic 4", "description epic 4")));
+        inMemoryTaskManager.getEpic(inMemoryTaskManager.addEpic(new Epic("epic 5", "description epic 5")));
+        inMemoryTaskManager.getHistory();
 
         System.out.println();
     }
