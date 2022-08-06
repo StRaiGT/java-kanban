@@ -1,9 +1,13 @@
-import java.util.ArrayList;
+package manager;
+
+import model.Task;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager{
     public final int MAX_HISTORY = 10;
-    private List<Task> history = new ArrayList<>();
+    private final List<Task> history = new LinkedList<>();
 
     @Override
     public void add(Task task) {

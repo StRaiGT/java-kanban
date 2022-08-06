@@ -1,6 +1,11 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+package manager;
+
+import model.Epic;
+import model.Subtask;
+import model.Task;
+
 import java.util.List;
+import java.util.Map;
 
 public interface TaskManager {
     // Добавить задачу
@@ -9,9 +14,9 @@ public interface TaskManager {
     int addSubtask(Subtask subtask);
 
     // Вернуть список задач
-    ArrayList<Task> getTasks();
-    ArrayList<Epic> getEpics();
-    ArrayList<Subtask> getSubtasks();
+    List<Task> getTasks();
+    List<Epic> getEpics();
+    List<Subtask> getSubtasks();
 
     // Получить задачу по id
     Task getTask(int id);
@@ -34,7 +39,7 @@ public interface TaskManager {
     void updateSubtask(int id, Subtask subtask);
 
     // Получить список подзадач определенного эпика
-    HashMap<Integer, Subtask> getEpicSubtasks(int id);
+    Map<Integer, Subtask> getEpicSubtasks(int id);
 
     // Обновление статуса эпика
     void updateEpicStatus(int id);

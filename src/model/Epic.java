@@ -1,8 +1,11 @@
-import java.util.ArrayList;
+package model;
 
-public class Epic extends Task{
+import java.util.ArrayList;
+import java.util.List;
+
+public class Epic extends Task {
     // Эпик может существовать без подзадач
-    private ArrayList<Integer> subtasksId = new ArrayList<>();
+    private List<Integer> subtasksId = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description);
@@ -13,11 +16,11 @@ public class Epic extends Task{
         this.subtasksId = epic.getSubtasksId();
     }
 
-    public ArrayList<Integer> getSubtasksId() {
+    public List<Integer> getSubtasksId() {
         return subtasksId;
     }
 
-    public void setSubtasksId(ArrayList<Integer> subtasksId) {
+    public void setSubtasksId(List<Integer> subtasksId) {
         this.subtasksId = subtasksId;
     }
 

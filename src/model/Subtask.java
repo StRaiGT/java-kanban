@@ -1,6 +1,8 @@
-public class Subtask extends Task{
+package model;
+
+public class Subtask extends Task {
     // Подзадача не может существовать без эпика
-    private int epicId;
+    private final int epicId;
 
     public Subtask(String name, String description, int epicId) {
         super(name, description);

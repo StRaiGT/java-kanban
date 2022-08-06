@@ -1,9 +1,16 @@
+import manager.Managers;
+import manager.TaskManager;
+import model.Epic;
+import model.State;
+import model.Subtask;
+import model.Task;
+
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
+        TaskManager inMemoryTaskManager = Managers.getDefault();
 
-        // Дебажим Task
+        // Дебажим model.Task
         Task task1 = new Task("task 1", "description task 1");
         Task task2 = new Task("task 2", "description task 2");
         Task task3 = new Task("task 3", "description task 3");
@@ -27,7 +34,7 @@ public class Main {
 
         System.out.println();
 
-        // Дебажим Epic и Subtask
+        // Дебажим model.Epic и model.Subtask
         Epic epic1 = new Epic("epic 1", "description epic 1");
         Epic epic2 = new Epic("epic 2", "description epic 2");
         Epic epic3 = new Epic("epic 3", "description epic 3");

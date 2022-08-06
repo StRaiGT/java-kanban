@@ -1,7 +1,9 @@
+package model;
+
 public class Task {
     private String name;
     private String description;
-    private State status;
+    private final State status;
 
     public Task(String name, String description) {
         this.name = name;
