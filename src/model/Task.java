@@ -1,8 +1,8 @@
 package model;
 
 public class Task {
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
     private final State status;
 
     public Task(String name, String description) {

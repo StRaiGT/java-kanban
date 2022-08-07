@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager{
-    public int counter = 1;
+    private int counter = 1;
     private Map<Integer, Task> tasks = new HashMap<>();
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, Subtask> subtasks = new HashMap<>();
@@ -44,17 +44,17 @@ public class InMemoryTaskManager implements TaskManager{
 
     // Вернуть список задач
     @Override
-    public ArrayList<Task> getTasks() {
+    public List<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public ArrayList<Epic> getEpics() {
+    public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
 
     @Override
-    public ArrayList<Subtask> getSubtasks() {
+    public List<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
@@ -154,9 +154,9 @@ public class InMemoryTaskManager implements TaskManager{
 
     // Получить список подзадач определенного эпика
     @Override
-    public HashMap<Integer, Subtask> getEpicSubtasks(int id) {
+    public Map<Integer, Subtask> getEpicSubtasks(int id) {
         if (epics.containsKey(id)) {
-            HashMap<Integer, Subtask> epicSubtasks = new HashMap<>();
+            Map<Integer, Subtask> epicSubtasks = new HashMap<>();
             for (int subtaskId : epics.get(id).getSubtasksId()) {
                 epicSubtasks.put(subtaskId, subtasks.get(subtaskId));
             }
