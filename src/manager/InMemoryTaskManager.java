@@ -20,13 +20,13 @@ public class InMemoryTaskManager implements TaskManager{
     // Добавить задачу
     @Override
     public int addTask(Task task) {
-        tasks.put(counter, task);
+        tasks.put(counter, new Task(counter, task));
         return counter++;
     }
 
     @Override
     public int addEpic(Epic epic) {
-        epics.put(counter, epic);
+        epics.put(counter, new Epic(counter, epic));
         return counter++;
     }
 
@@ -34,7 +34,7 @@ public class InMemoryTaskManager implements TaskManager{
     public int addSubtask(Subtask subtask) {
         int epicId = subtask.getEpicId();
         if (epics.containsKey(epicId)) {
-            subtasks.put(counter, subtask);
+            subtasks.put(counter, new Subtask(counter, subtask));
             epics.get(epicId).addSubtaskId(counter);
             updateEpicStatus(epicId);
             return counter++;
@@ -137,18 +137,18 @@ public class InMemoryTaskManager implements TaskManager{
     // Обновить задачу
     @Override
     public void updateTask(int id, Task task) {
-        tasks.put(id, task);
+        tasks.put(id, new Task(id, task));
     }
 
     @Override
     public void updateEpic(int id, Epic epic) {
         epic.setSubtasksId(epics.get(id).getSubtasksId());
-        epics.put(id, epic);
+        epics.put(id, new Epic(id, epic));
     }
 
     @Override
     public void updateSubtask(int id, Subtask subtask) {
-        subtasks.put(id, subtask);
+        subtasks.put(id, new Subtask(id, subtask));
         updateEpicStatus(subtask.getEpicId());
     }
 

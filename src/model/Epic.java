@@ -11,6 +11,11 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(int id, Epic epic) {
+        super(id, epic);
+        this.subtasksId = epic.getSubtasksId();
+    }
+
     public Epic(Epic epic, State status) {
         super(epic, status);
         this.subtasksId = epic.getSubtasksId();
@@ -44,7 +49,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return String.format("(Имя - '%s', Описание - '%s', статус - '%s', subtasksId - " + subtasksId + ")",
-                getName(), getDescription(), getStatus());
+        return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s', subtasksId - " + subtasksId + ")",
+                getId(), getName(), getDescription(), getStatus());
     }
 }
