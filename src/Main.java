@@ -74,10 +74,39 @@ public class Main {
 
         System.out.println();
 
-        // Дебажим историю (в списке уже есть 10 записей)
-        inMemoryTaskManager.getEpic(inMemoryTaskManager.addEpic(new Epic("epic 4", "description epic 4")));
-        inMemoryTaskManager.getEpic(inMemoryTaskManager.addEpic(new Epic("epic 5", "description epic 5")));
+        // Дебажим историю (список пуст)
+        int taskId51 = inMemoryTaskManager.addTask(new Task("task 51", "description task 51"));
+        int taskId52 = inMemoryTaskManager.addTask(new Task("task 52", "description task 52"));
+        int epicId53 = inMemoryTaskManager.addEpic(new Epic("epic 53", "description epic 53"));
+        int epicId54 = inMemoryTaskManager.addEpic(new Epic("epic 54", "description epic 54"));
+        int subtaskId55 = inMemoryTaskManager.addSubtask(
+                new Subtask("subtask 55", "description subtask 55", epicId53));
+        int subtaskId56 = inMemoryTaskManager.addSubtask(
+                new Subtask("subtask 56", "description subtask 56", epicId53));
+        int subtaskId57 = inMemoryTaskManager.addSubtask(
+                new Subtask("subtask 57", "description subtask 57", epicId53));
+
+        inMemoryTaskManager.getTask(taskId51);
+        inMemoryTaskManager.getTask(taskId51);
+        inMemoryTaskManager.getSubtask(subtaskId56);
+        inMemoryTaskManager.getEpic(epicId54);
+        inMemoryTaskManager.getSubtask(subtaskId55);
+        inMemoryTaskManager.getSubtask(subtaskId57);
+        inMemoryTaskManager.getTask(taskId52);
+        inMemoryTaskManager.getEpic(epicId53);
+        inMemoryTaskManager.getEpic(epicId54);
+        inMemoryTaskManager.getTask(taskId51);
+
         List<Task> history =  inMemoryTaskManager.getHistory();
+        System.out.println(history);
+
+        inMemoryTaskManager.removeTask(taskId51);
+        history =  inMemoryTaskManager.getHistory();
+        System.out.println(history);
+
+        inMemoryTaskManager.removeEpic(epicId53);
+        history =  inMemoryTaskManager.getHistory();
+        System.out.println(history);
 
         System.out.println();
     }
