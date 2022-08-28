@@ -24,13 +24,13 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     private void linkLast(Task task) {
-        final Node<Task> l = last;
-        final Node<Task> newNode = new Node<>(l, task, null);
+        final Node<Task> lastNode = last;
+        final Node<Task> newNode = new Node<>(lastNode, task, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
         customLinkedList.put(task.getId(), newNode);
     }
@@ -43,17 +43,12 @@ public class InMemoryHistoryManager implements HistoryManager{
             } else {
                 last = null;
             }
-            return;
         } else if (node == last) {
             last = last.prev;
             last.next = null;
-            return;
         } else {
-            final Node<Task> prev = node.prev;
-            final Node<Task> next = node.next;
-            node.prev.next = next;
-            node.next.prev = prev;
-            return;
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
     }
 
