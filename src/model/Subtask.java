@@ -3,6 +3,7 @@ package model;
 public class Subtask extends Task {
     // Подзадача не может существовать без эпика
     private final int epicId;
+    private final TaskType taskType = TaskType.SUBTASK;
 
     public Subtask(String name, String description, int epicId) {
         super(name, description);
@@ -18,8 +19,18 @@ public class Subtask extends Task {
         this.epicId = subtask.getEpicId();
     }
 
+    public Subtask(int id, String name, State status, String description, int epicId) {
+        super(id, name, status, description);
+        this.epicId =  epicId;
+    }
+
     public int getEpicId() {
         return epicId;
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return taskType;
     }
 
     @Override

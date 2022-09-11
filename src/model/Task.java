@@ -5,6 +5,7 @@ public class Task {
     private final String name;
     private final String description;
     private final State status;
+    private final TaskType taskType = TaskType.TASK;
 
     public Task(String name, String description) {
         this.name = name;
@@ -26,6 +27,13 @@ public class Task {
         this.status = status;
     }
 
+    public Task(int id, String name, State status, String description) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }
@@ -40,6 +48,10 @@ public class Task {
 
     public State getStatus() {
         return status;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
     }
 
     @Override

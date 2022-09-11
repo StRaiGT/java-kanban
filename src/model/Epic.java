@@ -6,6 +6,7 @@ import java.util.List;
 public class Epic extends Task {
     // Эпик может существовать без подзадач
     private List<Integer> subtasksId = new ArrayList<>();
+    private final TaskType taskType = TaskType.EPIC;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -19,6 +20,11 @@ public class Epic extends Task {
     public Epic(Epic epic, State status) {
         super(epic, status);
         this.subtasksId = epic.getSubtasksId();
+    }
+
+    public Epic(int id, String name, State status, String description, List subtasksId) {
+        super(id, name, status, description);
+        this.subtasksId = subtasksId;
     }
 
     public List<Integer> getSubtasksId() {
@@ -45,6 +51,11 @@ public class Epic extends Task {
             }
             subtasksId.remove(index);
         }
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return taskType;
     }
 
     @Override
