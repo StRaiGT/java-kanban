@@ -181,94 +181,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    // Сохранение задачи в строку
-    public static String toString(Task task) {
-        return String.format("%d,%s,%s,%s,%s",
-                task.getId(), task.getTaskType(), task.getName(), task.getStatus(), task.getDescription());
-    }
-
-    public static String toString(Epic epic) {
-        return String.format("%d,%s,%s,%s,%s,%s", epic.getId(), epic.getTaskType(), epic.getName(),
-                epic.getStatus(), epic.getDescription(), epic.getSubtasksId());
-    }
-
-    public static String toString(Subtask subtask) {
-        return String.format("%d,%s,%s,%s,%s,%d", subtask.getId(), subtask.getTaskType(), subtask.getName(),
-                subtask.getStatus(), subtask.getDescription(), subtask.getEpicId());
-    }
-
-    // Создаем задачу из подстроки
-    public static Task fromString(String text) {
-        String[] splitText = text.split(",");
-
-        int id = Integer.parseInt(splitText[0]);
-        TaskType taskType = TaskType.valueOf(splitText[1]);
-        String name = splitText[2];
-        State status = State.valueOf(splitText[3]);
-        String description = splitText[4];
-
-        switch (taskType) {
-            case TASK:
-                return new Task(id, name, status, description);
-            case EPIC:
-                List<Integer> subtasksId = new ArrayList<>();
-                if (splitText.length > 5) {
-                    for (int i = 5; i < splitText.length; i++) {
-                        String s = splitText[i].trim().replaceAll("[\\[\\]]", "");
-                        if (!s.isEmpty()) {
-                            subtasksId.add(Integer.parseInt(s));
-                        }
-                    }
-                }
-                return new Epic(id, name, status, description, subtasksId);
-            case SUBTASK:
-                int epicId = Integer.parseInt(splitText[5]);
-                return new Subtask(id, name, status, description, epicId);
-            default:
-                return null;
-        }
-    }
-
-    // Сохранение истории в строку
-    public static String historyToString(HistoryManager historyManager) {
-        StringBuilder sb = new StringBuilder();
-        for (Task task : historyManager.getHistory()) {
-            sb.append(task.getId() + ",");
-        }
-        if (sb.length() > 1) {
-            sb.deleteCharAt(sb.length() - 1);
-        }
-        return sb.toString();
-    }
-
-    // Чтение истории из строки
-    public static List<Integer> historyFromString(String text) {
-        String[] splitText = text.split(",");
-        List<Integer> list = new ArrayList<>();
-        for (String s : splitText) {
-            list.add(Integer.parseInt(s));
-        }
-        return list;
-    }
-
     // Сохранение в файл
     public void save() {
         try (final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))){
             bufferedWriter.write("id,type,name,status,description,epicId&subtasksId\n");
             for (Task task : tasks.values()) {
-                bufferedWriter.append(toString(task));
+                bufferedWriter.append(TaskUtils.toString(task));
                 bufferedWriter.newLine();
             }
             for (Epic epic : epics.values()) {
-                bufferedWriter.append(toString(epic));
+                bufferedWriter.append(TaskUtils.toString(epic));
                 bufferedWriter.newLine();
             }
             for (Subtask subtask : subtasks.values()) {
-                bufferedWriter.append(toString(subtask));
+                bufferedWriter.append(TaskUtils.toString(subtask));
                 bufferedWriter.newLine();
             }
             bufferedWriter.newLine();
-            bufferedWriter.write(historyToString(inMemoryHistoryManager));
+            bufferedWriter.write(HistoryUtils.historyToString(inMemoryHistoryManager));
         } catch (IOException exp) {
             throw new ManagerSaveException("Ошибка при записи в файл.", exp);
         }
@@ -286,13 +216,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 if (line.isEmpty()) {
                     break;
                 }
-                int id = fromString(line).getId();
-                if (fromString(line).getTaskType().equals(TASK)) {
-                    manager.tasks.put(id, fromString(line));
-                } else if (fromString(line).getTaskType().equals(EPIC)) {
-                    manager.epics.put(id, (Epic) fromString(line));
-                } else if (fromString(line).getTaskType().equals(SUBTASK)) {
-                    manager.subtasks.put(id, (Subtask) fromString(line));
+                int id = TaskUtils.fromString(line).getId();
+                if (TaskUtils.fromString(line).getTaskType().equals(TASK)) {
+                    manager.tasks.put(id, TaskUtils.fromString(line));
+                } else if (TaskUtils.fromString(line).getTaskType().equals(EPIC)) {
+                    manager.epics.put(id, (Epic) TaskUtils.fromString(line));
+                } else if (TaskUtils.fromString(line).getTaskType().equals(SUBTASK)) {
+                    manager.subtasks.put(id, (Subtask) TaskUtils.fromString(line));
                 }
                 if (id > maxCounter) {
                     maxCounter = id;
@@ -301,7 +231,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             manager.counter = ++maxCounter;
 
             line = bufferedReader.readLine();
-            for (int id : historyFromString(line)) {
+            for (int id : HistoryUtils.historyFromString(line)) {
                 if (manager.tasks.containsKey(id)) {
                     manager.inMemoryHistoryManager.add(manager.getTask(id));
                 } else if (manager.epics.containsKey(id)) {
