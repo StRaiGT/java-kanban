@@ -1,5 +1,7 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,8 +25,19 @@ public class Epic extends Task {
         this.subtasksId = epic.getSubtasksId();
     }
 
+    public Epic(Epic epic, Duration duration, LocalDateTime startTime) {
+        super(epic, duration, startTime);
+        this.subtasksId = epic.getSubtasksId();
+    }
+
     public Epic(int id, String name, State status, String description, List subtasksId) {
         super(id, name, status, description);
+        this.subtasksId = subtasksId;
+    }
+
+    public Epic(int id, String name, State status, String description, List subtasksId,
+                Duration duration, LocalDateTime startTime) {
+        super(id, name, status, description, duration, startTime);
         this.subtasksId = subtasksId;
     }
 
@@ -61,8 +74,9 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s', subtasksId - " + subtasksId + ")",
-                getId(), getName(), getDescription(), getStatus());
+        return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s', " +
+                        "длительность - '%s', " + "время начала - '%s', subtasksId - " + subtasksId + ")",
+                getId(), getName(), getDescription(), getStatus(), getDuration(), getStartTime());
     }
 
     @Override

@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Comparable<Task> {
     protected int id;
     protected final String name;
     protected final String description;
@@ -35,6 +35,15 @@ public class Task {
         this.status = status;
         this.startTime = task.getStartTime();
         this.duration = task.getDuration();
+    }
+
+    public Task(Task task, Duration duration, LocalDateTime startTime) {
+        this.id = task.getId();
+        this.name = task.getName();
+        this.description = task.getDescription();
+        this.status = task.getStatus();
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Task(int id, String name, State status, String description) {
@@ -90,8 +99,9 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s')",
-                getId(), getName(), getDescription(), getStatus());
+        return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s', " +
+                        "длительность - '%s', время начала - '%s')",
+                getId(), getName(), getDescription(), getStatus(), getDuration(), getStartTime());
     }
 
     @Override
@@ -107,5 +117,18 @@ public class Task {
     @Override
     public int hashCode(){
         return Objects.hash(name, description, id, status);
+    }
+
+    @Override
+    public int compareTo(Task obj) {
+        LocalDateTime time1 = this.getStartTime();
+        LocalDateTime time2 = obj.getStartTime();
+        if (time1 == null){
+            return 1;
+        }
+        if (time2 == null){
+            return -1;
+        }
+        return time1.compareTo(time2);
     }
 }

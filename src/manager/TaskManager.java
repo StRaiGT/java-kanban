@@ -4,6 +4,7 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,5 +47,9 @@ public interface TaskManager {
 
     // Вернуть историю просмотра задач
     List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
+
+    void updateEpicDuration(int id);
 }
 

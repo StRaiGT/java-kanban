@@ -1,5 +1,7 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
@@ -21,8 +23,19 @@ public class Subtask extends Task {
         this.epicId = subtask.getEpicId();
     }
 
+    public Subtask(Subtask subtask, Duration duration, LocalDateTime startTime) {
+        super(subtask, duration, startTime);
+        this.epicId = subtask.getEpicId();
+    }
+
     public Subtask(int id, String name, State status, String description, int epicId) {
         super(id, name, status, description);
+        this.epicId =  epicId;
+    }
+
+    public Subtask(int id, String name, State status, String description, int epicId,
+                   Duration duration, LocalDateTime startTime) {
+        super(id, name, status, description, duration, startTime);
         this.epicId =  epicId;
     }
 
@@ -37,8 +50,9 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s', EpicId - '%d')",
-                getId(), getName(), getDescription(), getStatus(), getEpicId());
+        return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s', " +
+                        "длительность - '%s', время начала - '%s', EpicId - '%d')",
+                getId(), getName(), getDescription(), getStatus(), getDuration(), getStartTime(), getEpicId());
     }
 
     @Override

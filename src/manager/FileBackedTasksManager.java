@@ -8,6 +8,8 @@ import model.Task;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,21 +27,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         File file = new File("src/resources/backup.csv");
         TaskManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
-        int taskId1 = fileBackedTasksManager.addTask(new Task("task 1", "description task 1"));
-        int taskId2 = fileBackedTasksManager.addTask(new Task("task 2", "description task 2"));
-        int taskId3 = fileBackedTasksManager.addTask(new Task("task 3", "description task 3"));
+        int taskId1 = fileBackedTasksManager.addTask(new Task(0, "task 1", State.NEW, "description task 1",
+                Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 6, 30)));
+        int taskId2 = fileBackedTasksManager.addTask(new Task(0, "task 2", State.NEW, "description task 2",
+                Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 7, 30)));
+        int taskId3 = fileBackedTasksManager.addTask(new Task(0, "task 1", State.NEW, "description task 1",
+                Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 7, 00)));
         fileBackedTasksManager.getTask(taskId1);
+
+        // Эта задача будет спускаться вниз по списку
+        int taskId4 = fileBackedTasksManager.addTask(new Task("task 4", "description task 4"));
 
         int epicId1 = fileBackedTasksManager.addEpic(new Epic("epic 1", "description epic 1"));
         int epicId2 = fileBackedTasksManager.addEpic(new Epic("epic 2", "description epic 2"));
         int epicId3 = fileBackedTasksManager.addEpic(new Epic("epic 3", "description epic 3"));
 
         int subtaskId1 = fileBackedTasksManager.addSubtask(
-                new Subtask("subtask 1", "description subtask 1", epicId1));
+                new Subtask(0, "subtask 1", State.NEW, "description subtask 1", epicId1,
+                        Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 9, 30)));
         int subtaskId2 = fileBackedTasksManager.addSubtask(
-                new Subtask("subtask 2", "description subtask 2", epicId1));
+                new Subtask(0, "subtask 2", State.NEW, "description subtask 2", epicId1,
+                        Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 11, 30)));
         int subtaskId3 = fileBackedTasksManager.addSubtask(
-                new Subtask("subtask 3", "description subtask 3", epicId2));
+                new Subtask(0, "subtask 3", State.NEW, "description subtask 3", epicId2,
+                        Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 10, 30)));
 
         fileBackedTasksManager.getTask(taskId1);
         fileBackedTasksManager.getTask(taskId3);
@@ -52,10 +63,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager.getTask(taskId3);
 
         System.out.println(fileBackedTasksManager.getHistory());
+        System.out.println(fileBackedTasksManager.getPrioritizedTasks());
 
         // Тестируем загрузку из файла
         TaskManager managerFromFile = FileBackedTasksManager.loadFromFile(file);
         System.out.println(managerFromFile.getHistory());
+        System.out.println(managerFromFile.getPrioritizedTasks());
     }
 
     // Добавить задачу
@@ -184,7 +197,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     // Сохранение в файл
     public void save() {
         try (final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))){
-            bufferedWriter.write("id,type,name,status,description,epicId&subtasksId\n");
+            bufferedWriter.write("id,type,name,status,description,duration,startTime,epicId&subtasksId\n");
             for (Task task : tasks.values()) {
                 bufferedWriter.append(TaskUtils.toString(task));
                 bufferedWriter.newLine();
@@ -239,6 +252,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 } else if (manager.subtasks.containsKey(id)) {
                     manager.inMemoryHistoryManager.add(manager.getSubtask(id));
                 }
+            }
+
+            for (Task task : manager.getTasks()) {
+                manager.prioritizedTasks.add(task);
+            }
+            for (Subtask subtask : manager.getSubtasks()) {
+                manager.prioritizedTasks.add(subtask);
             }
         } catch (IOException exp) {
             throw new ManagerSaveException("Ошибка при чтении из файла.", exp);
