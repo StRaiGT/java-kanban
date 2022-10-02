@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Subtask extends Task {
     // Подзадача не может существовать без эпика
     private final int epicId;
@@ -37,5 +39,21 @@ public class Subtask extends Task {
     public String toString() {
         return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s', EpicId - '%d')",
                 getId(), getName(), getDescription(), getStatus(), getEpicId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        Subtask subtask = (Subtask)obj;
+        return Objects.equals(id, subtask.id) && Objects.equals(name, subtask.name) &&
+                Objects.equals(description, subtask.description) && Objects.equals(status, subtask.status) &&
+                Objects.equals(epicId, subtask.epicId);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(name, description, id, status, epicId);
     }
 }

@@ -21,10 +21,12 @@ public abstract class HistoryUtils {
 
     // Чтение истории из строки
     public static List<Integer> historyFromString(String text) {
-        String[] splitText = text.split(",");
         List<Integer> list = new ArrayList<>();
-        for (String s : splitText) {
-            list.add(Integer.parseInt(s));
+        if (text != null) {
+            String[] splitText = text.split(",");
+            for (String s : splitText) {
+                list.add(Integer.parseInt(s));
+            }
         }
         return list;
     }

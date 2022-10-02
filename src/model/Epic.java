@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Epic extends Task {
     // Эпик может существовать без подзадач
@@ -62,5 +63,21 @@ public class Epic extends Task {
     public String toString() {
         return String.format("(Id - '%d', Имя - '%s', Описание - '%s', статус - '%s', subtasksId - " + subtasksId + ")",
                 getId(), getName(), getDescription(), getStatus());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        Epic epic = (Epic)obj;
+        return Objects.equals(id, epic.id) && Objects.equals(name, epic.name) &&
+                Objects.equals(description, epic.description) && Objects.equals(status, epic.status) &&
+                Objects.equals(subtasksId, epic.subtasksId);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(name, description, id, status, subtasksId);
     }
 }
