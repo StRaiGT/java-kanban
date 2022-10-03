@@ -20,7 +20,7 @@ public class InMemoryTaskManager implements TaskManager{
     // Добавить задачу
     @Override
     public int addTask(Task task) {
-        if (task == null && isIntersect(task)) {
+        if (task == null || isIntersect(task)) {
             return -1;
         }
         Task newTask = new Task(counter, task);
@@ -31,7 +31,7 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public int addEpic(Epic epic) {
-        if (epic == null && isIntersect(epic)) {
+        if (epic == null) {
             return -1;
         }
         epics.put(counter, new Epic(counter, epic));
@@ -40,7 +40,7 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public int addSubtask(Subtask subtask) {
-        if (subtask == null && isIntersect(subtask)) {
+        if (subtask == null || isIntersect(subtask)) {
             return -1;
         }
         int epicId = subtask.getEpicId();
@@ -154,7 +154,7 @@ public class InMemoryTaskManager implements TaskManager{
         epics.clear();
         for (Integer subtask : subtasks.keySet()) {
             inMemoryHistoryManager.remove(subtask);
-            prioritizedTasks.remove(subtask);
+            prioritizedTasks.remove(subtasks.get(subtask));
         }
         subtasks.clear();
     }
@@ -175,7 +175,7 @@ public class InMemoryTaskManager implements TaskManager{
     // Обновить задачу
     @Override
     public void updateTask(int id, Task task) {
-        if (task == null && isIntersect(task)) {
+        if (task == null || isIntersect(task)) {
             return;
         }
         if (prioritizedTasks.contains(tasks.get(id))){
@@ -188,7 +188,7 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public void updateEpic(int id, Epic epic) {
-        if (epic == null && isIntersect(epic)) {
+        if (epic == null) {
             return;
         }
         epic.setSubtasksId(epics.get(id).getSubtasksId());
@@ -197,7 +197,7 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public void updateSubtask(int id, Subtask subtask) {
-        if (subtask == null && isIntersect(subtask)) {
+        if (subtask == null || isIntersect(subtask)) {
             return;
         }
         if (prioritizedTasks.contains(subtasks.get(id))){
@@ -264,15 +264,20 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public void updateEpicDuration(int id) {
         TreeSet<Subtask> set = new TreeSet<>(getEpicSubtasks(id).values());
+        if (set.size() == 0) {
+            updateEpic(id, new Epic(epics.get(id), null, null));
+            return;
+        }
+
         Subtask lastSubtask = set.last();
         Subtask firstSubtask = set.first();
+
         for (Subtask subtask : set){
             if (subtask.getStartTime() != null){
                 firstSubtask = subtask;
                 break;
             }
         }
-
         LocalDateTime start = firstSubtask.getStartTime();
         LocalDateTime startOfLastSubtask = lastSubtask.getStartTime();
         Duration duration = lastSubtask.getDuration();

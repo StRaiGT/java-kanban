@@ -48,6 +48,7 @@ public class HistoryManagerTest {
     public void historyShouldBeEmptyAfterRemoveSingleTask(){
         manager.add(task1);
         manager.remove(task1.getId());
+
         assertTrue(manager.getHistory().isEmpty());
     }
 

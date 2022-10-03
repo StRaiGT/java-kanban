@@ -2,7 +2,6 @@ package manager;
 
 import model.Epic;
 import model.State;
-import model.TaskType;
 import model.Subtask;
 import model.Task;
 
@@ -10,7 +9,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static model.TaskType.*;

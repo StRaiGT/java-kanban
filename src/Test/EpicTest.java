@@ -8,6 +8,9 @@ import model.Subtask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
@@ -30,6 +33,7 @@ class EpicTest {
     @Test
     public void epicStateShouldBeNewWithEmptySubtasksList() {
         manager.removeAllSubtasks();
+
         assertEquals(State.NEW, manager.getEpics().get(0).getStatus());
     }
 
@@ -43,6 +47,7 @@ class EpicTest {
         for(Subtask subtask : manager.getSubtasks()) {
             manager.updateSubtask(subtask.getId(), new Subtask(subtask, State.DONE));
         }
+
         assertEquals(State.DONE, manager.getEpics().get(0).getStatus());
     }
 
@@ -50,6 +55,7 @@ class EpicTest {
     public void epicStateShouldBeInProgressWithSubtasksNewAndDoneState() {
         manager.updateSubtask(manager.getSubtasks().get(0).getId(),
                 new Subtask(manager.getSubtasks().get(0), State.DONE));
+
         assertEquals(State.IN_PROGRESS, manager.getEpics().get(0).getStatus());
     }
 
@@ -58,6 +64,76 @@ class EpicTest {
         for(Subtask subtask : manager.getSubtasks()) {
             manager.updateSubtask(subtask.getId(), new Subtask(subtask, State.IN_PROGRESS));
         }
+
         assertEquals(State.IN_PROGRESS, manager.getEpics().get(0).getStatus());
+    }
+
+     @Test
+    public void startTimeAndEndTimeShouldBeNullIfSubtasksWithoutStartTimeAndDuration() {
+         manager.addSubtask(new Subtask(0, "subtask 1", State.NEW, "description subtask 1",
+                epic.getId(), null, null));
+
+        assertNull(epic.getStartTime());
+        assertNull(epic.getEndTime());
+        assertNull(epic.getDuration());
+    }
+
+    @Test
+    public void epicShouldHaveStartTimeAndDurationIfSubtasksHaveIt() {
+        manager.removeAllSubtasks();
+        manager.addSubtask(new Subtask(0, "subtask 1", State.NEW, "description subtask 1",
+                1, Duration.ofHours(2), LocalDateTime.of(2003, 1, 28, 9, 30)));
+
+        assertEquals(manager.getEpic(1).getStartTime(),
+                LocalDateTime.of(2003, 1, 28, 9, 30));
+        assertEquals(manager.getEpic(1).getEndTime(),
+                LocalDateTime.of(2003, 1, 28, 9, 30).plus(Duration.ofHours(2)));
+        assertEquals(manager.getEpic(1).getDuration(), Duration.ofHours(2));
+    }
+
+    @Test
+    public void epicShouldHaveStartTimeAndDurationIfNotAllSubtasksHaveIt() {
+        manager.removeAllSubtasks();
+        manager.addSubtask(new Subtask(0, "subtask 1", State.NEW, "description subtask 1",
+                1, Duration.ofHours(2), LocalDateTime.of(2003, 1, 28, 9, 30)));
+        manager.addSubtask(new Subtask(0, "subtask 2", State.NEW, "description subtask 2",
+                1, null, null));
+
+        assertEquals(manager.getEpic(1).getStartTime(),
+                LocalDateTime.of(2003, 1, 28, 9, 30));
+        assertEquals(manager.getEpic(1).getEndTime(),
+                LocalDateTime.of(2003, 1, 28, 9, 30).plus(Duration.ofHours(2)));
+        assertEquals(manager.getEpic(1).getDuration(), Duration.ofHours(2));
+    }
+
+    @Test
+    public void epicDurationCanBeLongerThenSumOfDurationOfSubtasks() {
+        manager.removeAllSubtasks();
+        manager.addSubtask(new Subtask(0, "subtask 1", State.NEW, "description subtask 1",
+                1, Duration.ofHours(2), LocalDateTime.of(2003, 1, 28, 9, 30)));
+        manager.addSubtask(new Subtask(0, "subtask 1", State.IN_PROGRESS, "description subtask 1",
+                1, Duration.ofHours(2), LocalDateTime.of(2003, 1, 28, 13, 30)));
+
+        assertEquals(manager.getEpic(1).getStartTime(),
+                LocalDateTime.of(2003, 1, 28, 9, 30));
+        assertEquals(manager.getEpic(1).getEndTime(),
+                LocalDateTime.of(2003, 1, 28, 9, 30).plus(Duration.ofHours(6)));
+        assertEquals(manager.getEpic(1).getDuration(), Duration.ofHours(6));
+    }
+
+    @Test
+    public void shouldNotAddSubtasksWhichHasTimeIntersection(){
+        manager.removeAllSubtasks();
+        manager.addSubtask(new Subtask(0, "subtask 1", State.NEW, "description subtask 1",
+                1, Duration.ofHours(2), LocalDateTime.of(2003, 1, 28, 9, 30)));
+        manager.addSubtask(new Subtask(0, "subtask 1", State.IN_PROGRESS, "description subtask 1",
+                1, Duration.ofHours(2), LocalDateTime.of(2003, 1, 28, 10, 30)));
+
+        assertEquals(1, epic.getSubtasksId().size());
+        assertEquals(manager.getEpic(1).getStartTime(),
+                LocalDateTime.of(2003, 1, 28, 9, 30));
+        assertEquals(manager.getEpic(1).getEndTime(),
+                LocalDateTime.of(2003, 1, 28, 9, 30).plus(Duration.ofHours(2)));
+        assertEquals(manager.getEpic(1).getDuration(), Duration.ofHours(2));
     }
 }

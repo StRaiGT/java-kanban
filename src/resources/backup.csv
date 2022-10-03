@@ -1,13 +1,12 @@
 id,type,name,status,description,duration,startTime,epicId&subtasksId
 1,TASK,task 1,NEW,description task 1,PT30M,2003-01-28T06:30
 2,TASK,task 2,NEW,description task 2,PT30M,2003-01-28T07:30
-3,TASK,task 1,NEW,description task 1,PT30M,2003-01-28T07:00
-4,TASK,task 4,NEW,description task 4,null,null
-5,EPIC,epic 1,NEW,description epic 1,PT2H30M,2003-01-28T09:30,[8, 9]
-6,EPIC,epic 2,DONE,description epic 2,PT30M,2003-01-28T10:30,[10]
-7,EPIC,epic 3,NEW,description epic 3,null,null,[]
-8,SUBTASK,subtask 1,NEW,description subtask 1,PT30M,2003-01-28T09:30,5
-9,SUBTASK,subtask 2,NEW,description subtask 2,PT30M,2003-01-28T11:30,5
-10,SUBTASK,subtask 3,DONE,description subtask 3,null,null,6
+3,TASK,task 4,NEW,description task 4,null,null
+4,EPIC,epic 1,NEW,description epic 1,PT2H30M,2003-01-28T09:30,[7, 8]
+5,EPIC,epic 2,DONE,description epic 2,PT30M,2003-01-28T10:30,[9]
+6,EPIC,epic 3,NEW,description epic 3,null,null,[]
+7,SUBTASK,subtask 1,NEW,description subtask 1,PT30M,2003-01-28T09:30,4
+8,SUBTASK,subtask 2,NEW,description subtask 2,PT30M,2003-01-28T11:30,4
+9,SUBTASK,subtask 3,DONE,description subtask 3,null,null,5
 
-1,6,7,9,8,3
+1,5,6,8,7

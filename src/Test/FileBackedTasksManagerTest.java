@@ -27,6 +27,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     public void newManagerShouldBeEmptyAfterLoadingFromEmptyFile() {
         manager.save();
         FileBackedTasksManager newManager = FileBackedTasksManager.loadFromFile(fileToLoadFrom);
+
         assertEquals(manager.getEpics(), newManager.getEpics());
         assertEquals(manager.getTasks(), newManager.getTasks());
         assertEquals(manager.getSubtasks(), newManager.getSubtasks());
@@ -41,8 +42,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     public void loadEpicWithoutSubtasksFromFileToManagerWithoutSubtasks(){
         int epicId1 = manager.addEpic(new Epic("epic 1", "description epic 1"));
         manager.save();
-
         FileBackedTasksManager newManager = FileBackedTasksManager.loadFromFile(fileToLoadFrom);
+
         assertEquals(manager.getEpics(), newManager.getEpics());
         assertEquals(manager.getTasks(), newManager.getTasks());
         assertEquals(manager.getSubtasks(), newManager.getSubtasks());
@@ -60,8 +61,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         manager.addTask(new Task("task 2", "description task 2"));
         manager.addTask(new Task("task 3", "description task 3"));
         manager.save();
-
         FileBackedTasksManager newManager = FileBackedTasksManager.loadFromFile(fileToLoadFrom);
+
         assertTrue(newManager.getHistory().isEmpty());
     }
 }
