@@ -18,6 +18,11 @@ public class HistoryManagerTest {
     private Task task2;
     private Task task3;
 
+    public void setUpManager() {
+        manager.add(task1);
+        manager.add(task2);
+        manager.add(task3);
+    }
     @BeforeEach
     public void makeManager(){
         manager = new InMemoryHistoryManager();
@@ -33,9 +38,7 @@ public class HistoryManagerTest {
 
     @Test
     public void tasksShouldBeAddedInTheTailOfQuery(){
-        manager.add(task1);
-        manager.add(task2);
-        manager.add(task3);
+        setUpManager();
         List<Task> tasks = manager.getHistory();
 
         assertEquals(3, tasks.size());
@@ -54,9 +57,7 @@ public class HistoryManagerTest {
 
     @Test
     public void historyShouldContainOnlyOneTaskInTaleIfDuplicate(){
-        manager.add(task1);
-        manager.add(task2);
-        manager.add(task3);
+        setUpManager();
         manager.add(task2);
         manager.add(task2);
         List<Task> tasks = manager.getHistory();
@@ -68,9 +69,7 @@ public class HistoryManagerTest {
 
     @Test
     public void headShouldBeNextTaskInHistoryIfRemoveHead(){
-        manager.add(task1);
-        manager.add(task2);
-        manager.add(task3);
+        setUpManager();
         manager.remove(task1.getId());
         List<Task> tasks = manager.getHistory();
 
@@ -81,9 +80,7 @@ public class HistoryManagerTest {
 
     @Test
     public void tailShouldBePreviousTaskInHistoryIfRemoveTail(){
-        manager.add(task1);
-        manager.add(task2);
-        manager.add(task3);
+        setUpManager();
         manager.remove(task3.getId());
         List<Task> tasks = manager.getHistory();
 
@@ -94,9 +91,7 @@ public class HistoryManagerTest {
 
     @Test
     public void historyShouldContain2TasksAfterRemoveMiddle(){
-        manager.add(task1);
-        manager.add(task2);
-        manager.add(task3);
+        setUpManager();
         manager.remove(task2.getId());
         List<Task> tasks = manager.getHistory();
 

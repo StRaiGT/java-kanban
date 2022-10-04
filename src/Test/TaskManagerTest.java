@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +80,7 @@ public abstract class TaskManagerTest<T extends TaskManager>{
         int subtaskId1 = manager.addSubtask(new Subtask("subtask 1", "description subtask 1", 100));
 
         assertEquals(0, manager.getSubtasks().size());
+        assertNull(manager.getSubtask(subtaskId1));
     }
 
     @Test
