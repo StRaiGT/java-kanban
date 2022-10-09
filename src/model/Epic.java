@@ -9,36 +9,41 @@ import java.util.Objects;
 public class Epic extends Task {
     // Эпик может существовать без подзадач
     private List<Integer> subtasksId = new ArrayList<>();
-    private final TaskType taskType = TaskType.EPIC;
 
     public Epic(String name, String description) {
         super(name, description);
+        this.taskType = TaskType.EPIC;
     }
 
     public Epic(int id, Epic epic) {
         super(id, epic);
         this.subtasksId = epic.getSubtasksId();
+        this.taskType = TaskType.EPIC;
     }
 
     public Epic(Epic epic, State status) {
         super(epic, status);
         this.subtasksId = epic.getSubtasksId();
+        this.taskType = TaskType.EPIC;
     }
 
     public Epic(Epic epic, Duration duration, LocalDateTime startTime) {
         super(epic, duration, startTime);
         this.subtasksId = epic.getSubtasksId();
+        this.taskType = TaskType.EPIC;
     }
 
     public Epic(int id, String name, State status, String description, List subtasksId) {
         super(id, name, status, description);
         this.subtasksId = subtasksId;
+        this.taskType = TaskType.EPIC;
     }
 
     public Epic(int id, String name, State status, String description, List subtasksId,
                 Duration duration, LocalDateTime startTime) {
         super(id, name, status, description, duration, startTime);
         this.subtasksId = subtasksId;
+        this.taskType = TaskType.EPIC;
     }
 
     public List<Integer> getSubtasksId() {

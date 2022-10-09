@@ -9,7 +9,7 @@ public class Task implements Comparable<Task> {
     protected final String name;
     protected final String description;
     protected final State status;
-    protected final TaskType taskType = TaskType.TASK;
+    protected TaskType taskType;
     protected Duration duration;
     protected LocalDateTime startTime;
 
@@ -17,6 +17,7 @@ public class Task implements Comparable<Task> {
         this.name = name;
         this.description = description;
         status = State.NEW;
+        this.taskType = TaskType.TASK;
     }
 
     public Task(int id, Task task) {
@@ -26,6 +27,7 @@ public class Task implements Comparable<Task> {
         this.status = task.status;
         this.startTime = task.getStartTime();
         this.duration = task.getDuration();
+        this.taskType = TaskType.TASK;
     }
 
     public Task(Task task, State status) {
@@ -35,6 +37,7 @@ public class Task implements Comparable<Task> {
         this.status = status;
         this.startTime = task.getStartTime();
         this.duration = task.getDuration();
+        this.taskType = TaskType.TASK;
     }
 
     public Task(Task task, Duration duration, LocalDateTime startTime) {
@@ -44,6 +47,7 @@ public class Task implements Comparable<Task> {
         this.status = task.getStatus();
         this.startTime = startTime;
         this.duration = duration;
+        this.taskType = TaskType.TASK;
     }
 
     public Task(int id, String name, State status, String description) {
@@ -51,6 +55,7 @@ public class Task implements Comparable<Task> {
         this.name = name;
         this.status = status;
         this.description = description;
+        this.taskType = TaskType.TASK;
     }
 
     public Task(int id, String name, State status, String description, Duration duration, LocalDateTime startTime) {
@@ -60,6 +65,7 @@ public class Task implements Comparable<Task> {
         this.description = description;
         this.duration = duration;
         this.startTime = startTime;
+        this.taskType = TaskType.TASK;
     }
 
     public int getId() {
