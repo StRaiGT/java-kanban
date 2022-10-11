@@ -114,9 +114,9 @@ public class Main {
         System.out.println(history);
 
         System.out.println();
-/*
+
         HttpTaskServer ts = new HttpTaskServer(inMemoryTaskManager);
         ts.start();
-*/
+
     }
 }
