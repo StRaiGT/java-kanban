@@ -4,16 +4,20 @@ import model.Epic;
 import model.State;
 import model.Subtask;
 import model.Task;
-import server.HttpTaskServer;
+import server.KVServer;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        try {
+            new KVServer().start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         TaskManager inMemoryTaskManager = Managers.getDefault();
 
         // Дебажим model.Task
@@ -114,9 +118,6 @@ public class Main {
         System.out.println(history);
 
         System.out.println();
-
-        HttpTaskServer ts = new HttpTaskServer(inMemoryTaskManager);
-        ts.start();
 
     }
 }

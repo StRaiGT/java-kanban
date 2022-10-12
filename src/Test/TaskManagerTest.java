@@ -139,6 +139,7 @@ public abstract class TaskManagerTest<T extends TaskManager>{
     public void shouldReturnNullIfTaskNotExist() {
         assertNull(manager.getTask(22222));
     }
+
     @Test
     public void shouldReturnNullIfEpicNotExist() {
         assertNull(manager.getEpic(22222));

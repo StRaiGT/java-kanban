@@ -5,9 +5,13 @@ import manager.TaskManager;
 import model.Epic;
 import model.State;
 import model.Subtask;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.KVServer;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -15,7 +19,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
     private static Epic epic;
-    private static TaskManager manager = Managers.getDefault();
+    private static TaskManager manager;
+    static KVServer kvServer;
+
+    @BeforeAll
+    static void beforeAll() throws IOException {
+        kvServer = new KVServer();
+        kvServer.start();
+        manager = Managers.getDefault();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        try {
+            kvServer.stop();
+        } catch (IllegalMonitorStateException | InterruptedException e) {
+
+        }
+    }
 
     @BeforeEach
     public void addNewEpic(){

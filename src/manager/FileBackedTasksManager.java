@@ -14,7 +14,11 @@ import java.util.List;
 import static model.TaskType.*;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final File file;
+    private File file;
+
+    public FileBackedTasksManager() {
+        file = new File("src/resources/backup.csv");
+    }
 
     public FileBackedTasksManager(File file) {
         this.file = file;

@@ -315,4 +315,16 @@ public class InMemoryTaskManager implements TaskManager{
         }
         return false;
     }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
+    public HistoryManager getInMemoryHistoryManager() {
+        return inMemoryHistoryManager;
+    }
 }

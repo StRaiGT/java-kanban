@@ -27,12 +27,7 @@ public class HttpTaskServer {
     public static HttpServer server;
 
     public HttpTaskServer() throws IOException {
-        taskManager = Managers.getDefault();
-        gson = Managers.getGson();
-    }
-
-    public HttpTaskServer(TaskManager taskManager) throws IOException {
-        this.taskManager = taskManager;
+        this.taskManager = Managers.getDefault();
         gson = Managers.getGson();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/tasks/task", this::TasksHandler);
@@ -80,7 +75,7 @@ public class HttpTaskServer {
                     taskManager.removeAllTasks();
                     System.out.println("Удалили все задачи");
                     httpExchange.sendResponseHeaders(200, 0);
-                    sendText(httpExchange, null);
+                    httpExchange.close();
                     break;
                 }
 
@@ -88,13 +83,14 @@ public class HttpTaskServer {
                 taskManager.removeTask(id);
                 System.out.println("Удалили задачу " + id);
                 httpExchange.sendResponseHeaders(200, 0);
-                sendText(httpExchange, null);
+                httpExchange.close();
                 break;
             case "POST":
                 String json = readText(httpExchange);
                 if (json.isEmpty()) {
                     System.out.println("Тело запроса пусто");
                     httpExchange.sendResponseHeaders(400, 0);
+                    httpExchange.close();
                     break;
                 }
 
@@ -104,6 +100,7 @@ public class HttpTaskServer {
                     taskManager.updateTask(id, taskToPost);
                     System.out.println("Обновили задачу с id = " + id);
                     httpExchange.sendResponseHeaders(200, 0);
+                    httpExchange.close();
                 } else {
                     id = taskManager.addTask(taskToPost);
                     System.out.println("Создали новую задачу с id = " + id);
@@ -112,8 +109,9 @@ public class HttpTaskServer {
                 }
                 break;
             default:
-                System.out.println("/task получен " + httpExchange.getRequestMethod());
+                System.out.println("/tasks получен " + httpExchange.getRequestMethod());
                 httpExchange.sendResponseHeaders(405, 0);
+                httpExchange.close();
         }
     }
 
@@ -142,6 +140,7 @@ public class HttpTaskServer {
                     taskManager.removeAllEpics();
                     System.out.println("Удалили все задачи");
                     httpExchange.sendResponseHeaders(200, 0);
+                    httpExchange.close();
                     break;
                 }
 
@@ -149,13 +148,14 @@ public class HttpTaskServer {
                 taskManager.removeEpic(id);
                 System.out.println("Удалили задачу " + id);
                 httpExchange.sendResponseHeaders(200, 0);
-                sendText(httpExchange, null);
+                httpExchange.close();
                 break;
             case "POST":
                 String json = readText(httpExchange);
                 if (json.isEmpty()) {
                     System.out.println("Тело запроса пусто");
                     httpExchange.sendResponseHeaders(400, 0);
+                    httpExchange.close();
                     break;
                 }
 
@@ -166,6 +166,7 @@ public class HttpTaskServer {
                     taskManager.updateEpic(id, epicToPost);
                     System.out.println("Обновили эпик с id = " + id);
                     httpExchange.sendResponseHeaders(200, 0);
+                    httpExchange.close();
                 } else {
                     id = taskManager.addEpic(epicToPost);
                     System.out.println("Создали новый эпик с id = " + id);
@@ -176,6 +177,7 @@ public class HttpTaskServer {
             default:
                 System.out.println("/epic получен " + httpExchange.getRequestMethod());
                 httpExchange.sendResponseHeaders(405, 0);
+                httpExchange.close();
         }
     }
 
@@ -204,6 +206,7 @@ public class HttpTaskServer {
                     taskManager.removeAllSubtasks();
                     System.out.println("Удалили все задачи");
                     httpExchange.sendResponseHeaders(200, 0);
+                    httpExchange.close();
                     break;
                 }
 
@@ -211,13 +214,14 @@ public class HttpTaskServer {
                 taskManager.removeSubtask(id);
                 System.out.println("Удалили задачу " + id);
                 httpExchange.sendResponseHeaders(200, 0);
-                sendText(httpExchange, null);
+                httpExchange.close();
                 break;
             case "POST":
                 String json = readText(httpExchange);
                 if (json.isEmpty()) {
                     System.out.println("Тело запроса пусто");
                     httpExchange.sendResponseHeaders(400, 0);
+                    httpExchange.close();
                     break;
                 }
 
@@ -228,6 +232,7 @@ public class HttpTaskServer {
                     taskManager.updateSubtask(id, subtaskToPost);
                     System.out.println("Обновили подзадачу с id = " + id);
                     httpExchange.sendResponseHeaders(200, 0);
+                    httpExchange.close();
                 } else {
                     id = taskManager.addSubtask(subtaskToPost);
                     System.out.println("Создали новую подзадачу с id = " + id);
@@ -238,6 +243,7 @@ public class HttpTaskServer {
             default:
                 System.out.println("/subtask получен " + httpExchange.getRequestMethod());
                 httpExchange.sendResponseHeaders(405, 0);
+                httpExchange.close();
         }
     }
 
@@ -247,18 +253,13 @@ public class HttpTaskServer {
         String path = responseURI.getPath();
 
         if (path.endsWith("/history") && method.equals("GET")) {
-            String historyJson = gson.toJson(taskManager.getHistory());
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(historyJson.getBytes());
-            }
+            final String historyJson = gson.toJson(taskManager.getHistory());
+            System.out.println("История получена");
+            sendText(httpExchange, historyJson);
         } else if (path.endsWith("/tasks/") && method.equals("GET")) {
-            String prTasksJson = gson.toJson(taskManager.getPrioritizedTasks());
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(prTasksJson.getBytes(StandardCharsets.UTF_8));
-            }
-            httpExchange.close();
+            final String prTasksJson = gson.toJson(taskManager.getPrioritizedTasks());
+            System.out.println("Список приоритетных задач получен");
+            sendText(httpExchange, prTasksJson);
         } else {
             httpExchange.sendResponseHeaders(404, 0);
             httpExchange.close();
@@ -272,11 +273,15 @@ public class HttpTaskServer {
     }
 
     private void sendText(HttpExchange httpExchange, String response) throws IOException {
-        String responseJson = gson.toJson(response);
+        //String responseJson = gson.toJson(response);
         httpExchange.sendResponseHeaders(200, 0);
         try (OutputStream os = httpExchange.getResponseBody()) {
-            os.write(responseJson.getBytes(DEFAULT_CHARSET));
+            os.write(response.getBytes(DEFAULT_CHARSET));
         }
         httpExchange.close();
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 }
