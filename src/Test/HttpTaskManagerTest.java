@@ -48,10 +48,7 @@ public class HttpTaskManagerTest {
 
     @AfterAll
     static void afterAll() {
-        try {
-            kvServer.stop();
-        } catch (IllegalMonitorStateException | InterruptedException e) {
-        }
+        kvServer.stop();
     }
 
     @AfterEach

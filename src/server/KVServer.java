@@ -31,11 +31,8 @@ public class KVServer {
         server.start();
     }
 
-    public void stop() throws InterruptedException {
-        // добавил из-за того, что сервер выключается с задержкой и руинит все тесты
-        wait(100);
-
-        stop();
+    public void stop() {
+        server.stop(0);
     }
 
     private void load(HttpExchange h) {

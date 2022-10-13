@@ -53,9 +53,7 @@ class HttpTaskServerTest {
 
     @AfterAll
     static void stopServers() {
-        try {
-            kvServer.stop();
-        } catch (IllegalMonitorStateException | InterruptedException e) {}
+        kvServer.stop();
         server.stop();
     }
 
