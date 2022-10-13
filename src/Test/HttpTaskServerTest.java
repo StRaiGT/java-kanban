@@ -21,16 +21,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class HttpTaskServerTest {
-    static HttpTaskServer server;
-    static KVServer kvServer;
-    Gson gson = Managers.getGson();
-    HttpClient client = HttpClient.newHttpClient();
-    int epicId;
-    int taskId;
-    int subtaskId;
+    private static HttpTaskServer server;
+    private static KVServer kvServer;
+    private Gson gson = Managers.getGson();
+    private HttpClient client = HttpClient.newHttpClient();
+    private int epicId;
+    private int taskId;
+    private int subtaskId;
 
     @BeforeAll
-    static void startServers() throws IOException {
+    public static void startServers() throws IOException {
         kvServer = new KVServer();
         kvServer.start();
         server = new HttpTaskServer();
@@ -52,13 +52,13 @@ class HttpTaskServerTest {
     }
 
     @AfterAll
-    static void stopServers() {
+    public static void stopServers() {
         kvServer.stop();
         server.stop();
     }
 
     @Test
-    void shouldAddTask() throws IOException, InterruptedException {
+    public void shouldAddTask() throws IOException, InterruptedException {
         Task task = new Task(0, "task 2", State.NEW, "description task 2",
                 Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 15, 30));
         URI url = URI.create("http://localhost:8080/tasks/task");
@@ -73,7 +73,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldNotAddNullTask() throws IOException, InterruptedException {
+    public void shouldNotAddNullTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task");
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.noBody())
@@ -86,7 +86,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldUpdateTask() throws IOException, InterruptedException {
+    public void shouldUpdateTask() throws IOException, InterruptedException {
         Task task = new Task(1, "update task 1", State.NEW, "update description task 1",
                 Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 6, 30));
         URI url = URI.create("http://localhost:8080/tasks/task");
@@ -100,7 +100,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldGetTask() throws IOException, InterruptedException {
+    public void shouldGetTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task/?id=1");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -113,7 +113,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldGetAllTasks() throws IOException, InterruptedException {
+    public void shouldGetAllTasks() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task/");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -127,7 +127,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldRemoveTask() throws IOException, InterruptedException {
+    public void shouldRemoveTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task/?id=1");
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -140,7 +140,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldRemoveAllTasks() throws IOException, InterruptedException {
+    public void shouldRemoveAllTasks() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task/");
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -153,7 +153,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldAddEpic() throws IOException, InterruptedException {
+    public void shouldAddEpic() throws IOException, InterruptedException {
         Epic epic = new Epic("epic 2", "description epic 2");
         URI url = URI.create("http://localhost:8080/tasks/epic");
         HttpRequest request = HttpRequest.newBuilder()
@@ -167,7 +167,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldNotAddNullEpic() throws IOException, InterruptedException {
+    public void shouldNotAddNullEpic() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/epic");
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.noBody())
@@ -180,7 +180,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldUpdateEpic() throws IOException, InterruptedException {
+    public void shouldUpdateEpic() throws IOException, InterruptedException {
         Epic epic = new Epic(2, new Epic("update epic 1", "update description epic 1"));
         URI url = URI.create("http://localhost:8080/tasks/epic");
         HttpRequest request = HttpRequest.newBuilder()
@@ -193,7 +193,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldGetEpic() throws IOException, InterruptedException {
+    public void shouldGetEpic() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/epic/?id=2");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -206,7 +206,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldGetAllEpics() throws IOException, InterruptedException {
+    public void shouldGetAllEpics() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/epic/");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -220,7 +220,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldRemoveEpic() throws IOException, InterruptedException {
+    public void shouldRemoveEpic() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/epic/?id=2");
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -233,7 +233,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldRemoveAllEpics() throws IOException, InterruptedException {
+    public void shouldRemoveAllEpics() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/epic/");
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -246,7 +246,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldAddSubtask() throws IOException, InterruptedException {
+    public void shouldAddSubtask() throws IOException, InterruptedException {
         Subtask subtask = new Subtask(0, "subtask 2", State.NEW, "description subtask 2", epicId,
                 Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 12, 30));
         URI url = URI.create("http://localhost:8080/tasks/subtask");
@@ -261,7 +261,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldNotAddNullSubtask() throws IOException, InterruptedException {
+    public void shouldNotAddNullSubtask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask");
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.noBody())
@@ -274,7 +274,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldUpdateSubtask() throws IOException, InterruptedException {
+    public void shouldUpdateSubtask() throws IOException, InterruptedException {
         Subtask subtask = new Subtask(subtaskId, "subtask 1", State.NEW, "description subtask 1", epicId,
                 Duration.ofMinutes(30), LocalDateTime.of(2003, 1, 28, 12, 30));
         URI url = URI.create("http://localhost:8080/tasks/subtask");
@@ -288,7 +288,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldGetSubtask() throws IOException, InterruptedException {
+    public void shouldGetSubtask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask/?id=3");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -301,7 +301,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldGetAllSubtasks() throws IOException, InterruptedException {
+    public void shouldGetAllSubtasks() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask/");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -315,7 +315,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldRemoveSubtask() throws IOException, InterruptedException {
+    public void shouldRemoveSubtask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask/?id=3");
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -328,7 +328,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldRemoveAllSubtasks() throws IOException, InterruptedException {
+    public void shouldRemoveAllSubtasks() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask/");
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -341,7 +341,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldGetPrioritizedTask() throws IOException, InterruptedException {
+    public void shouldGetPrioritizedTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/");
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(url)
@@ -355,7 +355,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void shouldGetHistory() throws IOException, InterruptedException {
+    public void shouldGetHistory() throws IOException, InterruptedException {
         server.getTaskManager().getTask(taskId);
         server.getTaskManager().getSubtask(subtaskId);
 

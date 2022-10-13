@@ -1,6 +1,7 @@
 package Test;
 
 import manager.FileBackedTasksManager;
+import manager.Managers;
 import model.Epic;
 import model.Task;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
-    static String path = "src/resources/testBackup.csv";
+    static String path = Managers.getTestBackup();
     private final Path fileToSaveData = Path.of(path);
     private final File fileToLoadFrom = new File(String.valueOf(fileToSaveData));
 

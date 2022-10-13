@@ -17,7 +17,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private File file;
 
     public FileBackedTasksManager() {
-        file = new File("src/resources/backup.csv");
+        file = new File(Managers.getBackup());
     }
 
     public FileBackedTasksManager(File file) {
@@ -26,7 +26,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
         // Тестируем сохранение в файл
-        File file = new File("src/resources/backup.csv");
+        File file = new File(Managers.getBackup());
         TaskManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
         int taskId1 = fileBackedTasksManager.addTask(new Task(0, "task 1", State.NEW, "description task 1",

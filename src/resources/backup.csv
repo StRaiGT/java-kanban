@@ -1,5 +1,0 @@
-id,type,name,status,description,duration,startTime,epicId&subtasksId
-1,TASK,task 1,NEW,description task 1,PT30M,2003-01-28T06:30
-2,TASK,new task,NEW,new task,null,null
-3,TASK,new task,NEW,new task,null,null
-

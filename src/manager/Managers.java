@@ -25,4 +25,12 @@ public abstract class Managers {
                 .create();
         return gson;
     }
+
+    public static String getBackup() {
+        return "history/backup.csv";
+    }
+
+    public static String getTestBackup() {
+        return "history/testBackup.csv";
+    }
 }

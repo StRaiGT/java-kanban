@@ -20,11 +20,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class HttpTaskServer {
-    private TaskManager taskManager;
+    private final TaskManager taskManager;
     private static final int PORT = 8080;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    private static Gson gson;
-    public static HttpServer server;
+    private Gson gson;
+    public HttpServer server;
 
     public HttpTaskServer() throws IOException {
         this.taskManager = Managers.getDefault();
@@ -75,20 +75,20 @@ public class HttpTaskServer {
                     if (query == null) {
                         taskManager.removeAllTasks();
                         System.out.println("Удалили все задачи");
-                        httpExchange.sendResponseHeaders(200, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                         break;
                     }
 
                     id = Integer.parseInt(query.substring(3));
                     taskManager.removeTask(id);
                     System.out.println("Удалили задачу " + id);
-                    httpExchange.sendResponseHeaders(200, 0);
+                    httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                     break;
                 case "POST":
                     String json = readText(httpExchange);
                     if (json.isEmpty()) {
                         System.out.println("Тело запроса пусто");
-                        httpExchange.sendResponseHeaders(400, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.NO_BODY.getCode(), 0);
                         break;
                     }
 
@@ -97,7 +97,7 @@ public class HttpTaskServer {
                     if (id != 0) {
                         taskManager.updateTask(id, taskToPost);
                         System.out.println("Обновили задачу с id = " + id);
-                        httpExchange.sendResponseHeaders(200, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                     } else {
                         id = taskManager.addTask(taskToPost);
                         System.out.println("Создали новую задачу с id = " + id);
@@ -107,7 +107,7 @@ public class HttpTaskServer {
                     break;
                 default:
                     System.out.println("/tasks получен " + httpExchange.getRequestMethod());
-                    httpExchange.sendResponseHeaders(405, 0);
+                    httpExchange.sendResponseHeaders(StatusCode.UNKNOWN.getCode(), 0);
             }
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -141,20 +141,20 @@ public class HttpTaskServer {
                     if (query == null) {
                         taskManager.removeAllEpics();
                         System.out.println("Удалили все задачи");
-                        httpExchange.sendResponseHeaders(200, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                         break;
                     }
 
                     id = Integer.parseInt(query.substring(3));
                     taskManager.removeEpic(id);
                     System.out.println("Удалили задачу " + id);
-                    httpExchange.sendResponseHeaders(200, 0);
+                    httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                     break;
                 case "POST":
                     String json = readText(httpExchange);
                     if (json.isEmpty()) {
                         System.out.println("Тело запроса пусто");
-                        httpExchange.sendResponseHeaders(400, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.NO_BODY.getCode(), 0);
                         break;
                     }
 
@@ -164,7 +164,7 @@ public class HttpTaskServer {
                     if (id != 0) {
                         taskManager.updateEpic(id, epicToPost);
                         System.out.println("Обновили эпик с id = " + id);
-                        httpExchange.sendResponseHeaders(200, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                     } else {
                         id = taskManager.addEpic(epicToPost);
                         System.out.println("Создали новый эпик с id = " + id);
@@ -174,7 +174,7 @@ public class HttpTaskServer {
                     break;
                 default:
                     System.out.println("/epic получен " + httpExchange.getRequestMethod());
-                    httpExchange.sendResponseHeaders(405, 0);
+                    httpExchange.sendResponseHeaders(StatusCode.UNKNOWN.getCode(), 0);
             }
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -208,20 +208,20 @@ public class HttpTaskServer {
                     if (query == null) {
                         taskManager.removeAllSubtasks();
                         System.out.println("Удалили все задачи");
-                        httpExchange.sendResponseHeaders(200, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                         break;
                     }
 
                     id = Integer.parseInt(query.substring(3));
                     taskManager.removeSubtask(id);
                     System.out.println("Удалили задачу " + id);
-                    httpExchange.sendResponseHeaders(200, 0);
+                    httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                     break;
                 case "POST":
                     String json = readText(httpExchange);
                     if (json.isEmpty()) {
                         System.out.println("Тело запроса пусто");
-                        httpExchange.sendResponseHeaders(400, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.NO_BODY.getCode(), 0);
                         break;
                     }
 
@@ -231,7 +231,7 @@ public class HttpTaskServer {
                     if (id != 0) {
                         taskManager.updateSubtask(id, subtaskToPost);
                         System.out.println("Обновили подзадачу с id = " + id);
-                        httpExchange.sendResponseHeaders(200, 0);
+                        httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
                     } else {
                         id = taskManager.addSubtask(subtaskToPost);
                         System.out.println("Создали новую подзадачу с id = " + id);
@@ -241,7 +241,7 @@ public class HttpTaskServer {
                     break;
                 default:
                     System.out.println("/subtask получен " + httpExchange.getRequestMethod());
-                    httpExchange.sendResponseHeaders(405, 0);
+                    httpExchange.sendResponseHeaders(StatusCode.UNKNOWN.getCode(), 0);
             }
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -265,7 +265,7 @@ public class HttpTaskServer {
                 System.out.println("Список приоритетных задач получен");
                 sendText(httpExchange, prTasksJson);
             } else {
-                httpExchange.sendResponseHeaders(404, 0);
+                httpExchange.sendResponseHeaders(StatusCode.NO_FOUND.getCode(), 0);
             }
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -276,12 +276,11 @@ public class HttpTaskServer {
 
     private String readText(HttpExchange httpExchange) throws IOException {
         InputStream inputStream = httpExchange.getRequestBody();
-        String body = new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
-        return body;
+        return new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
     }
 
     private void sendText(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, 0);
+        httpExchange.sendResponseHeaders(StatusCode.OK.getCode(), 0);
         try (OutputStream os = httpExchange.getResponseBody()) {
             os.write(response.getBytes(DEFAULT_CHARSET));
         }
